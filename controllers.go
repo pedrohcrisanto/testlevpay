@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 )
 
@@ -15,10 +16,13 @@ func getSuperHeros(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 }
+
 func createSuperHero(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	variable := params["id"]
+	url := "https://superheroapi.com/api/10157313301043512/" + variable
 
-	response, err := http.Get("https://superheroapi.com/api/10157313301043512/")
-
+	response, err := http.Get(url)
 	responseData, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		log.Fatal(err)
@@ -37,19 +41,22 @@ func createSuperHero(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	sqlStatement := `
-	INSERT INTO superheros (name)
-	VALUES ($1)
+	INSERT INTO superheros (name, fullname, intelligence, power, occupation, image, work, uuid)
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 	RETURNING id`
 	id := 0
-	err = db.QueryRow(sqlStatement, responseObject.Name).Scan(&id)
+	fmt.Println(responseObject)
+	err = db.QueryRow(sqlStatement, responseObject.Name, "Nome Completo", 25, 40, "Trabalhador", "URL IMAGE", "Vendendor", uuid.New()).Scan(&id)
 	if err != nil {
 		panic(err)
 	}
 }
+
 func getSuperHero(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 }
+
 func updateSuperHero(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
@@ -72,6 +79,7 @@ func updateSuperHero(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
 func deleteSuperHero(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
