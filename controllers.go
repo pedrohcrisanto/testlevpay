@@ -14,7 +14,28 @@ import (
 
 func getSuperHeros(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		panic(err)
+	}
 
+	result, err := db.Query("SELECT id, name, fullname, intelligence, power, occupation, image, work, uuid from superheros")
+	defer db.Close()
+	if err != nil {
+		panic(err.Error())
+	}
+	for result.Next() {
+		var superhero SuperHero
+		err := result.Scan(&superhero.ID, &superhero.Name, &superhero.Fullname, &superhero.Intelligence, &superhero.Power, &superhero.Occupation, &superhero.Image, &superhero.Work, &superhero.UUID)
+		if err != nil {
+			panic(err.Error())
+		}
+		superheros = append(superheros, superhero)
+	}
+	json.NewEncoder(w).Encode(superheros)
 }
 
 func createSuperHero(w http.ResponseWriter, r *http.Request) {
