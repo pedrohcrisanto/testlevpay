@@ -11,13 +11,13 @@ const (
 	host     = "localhost"
 	port     = 5432
 	user     = "postgres"
-	password = "pedroh123"
-	dbname   = "testlevpay2"
+	password = "1992"
+	dbname   = "testlevpay3"
 )
 
 func main() {
 	router := mux.NewRouter()
-	//superheros = append(superheros, SuperHero{ID: "1", Name: "Spider-Man"})
+	// superheros = append(superheros, SuperHero{ID: "1", Name: "Spider-Man"})
 	router.HandleFunc("/superheros", getSuperHeros).Methods("GET")
 	router.HandleFunc("/superherosapi/{id}", createSuperHero).Methods("POST")
 	router.HandleFunc("/superheros/{id}", getSuperHero).Methods("GET")
