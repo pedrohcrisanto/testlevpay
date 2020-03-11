@@ -68,13 +68,13 @@ func createSuperHero(w http.ResponseWriter, r *http.Request) {
 	VALUES ($1, $2, $3, $4, $5, $6, $7)
 	RETURNING id`
 	id := 0
-	fmt.Println(responseObject.Name)
 	err = db.QueryRow(sqlStatement, responseObject.Name, responseObject.Biography.Fullname,
 		responseObject.PowerStatus.Intelligence, responseObject.PowerStatus.Power,
 		responseObject.Work.Occupation, responseObject.Image.Url, uuid.New()).Scan(&id)
 	if err != nil {
 		panic(err)
 	}
+	json.NewEncoder(w).Encode("Criado com Sucesso!")
 }
 
 func getSuperHero(w http.ResponseWriter, r *http.Request) {
@@ -108,25 +108,29 @@ func getSuperHero(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateSuperHero(w http.ResponseWriter, r *http.Request) {
-	// w.Header().Set("Content-Type", "application/json")
-	// params := mux.Vars(r)
-	// psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-	// 	"password=%s dbname=%s sslmode=disable",
-	// 	host, port, user, password, dbname)
-	// db, err := sql.Open("postgres", psqlInfo)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// defer db.Close()
-
-	// sqlStatement := `
-	// UPDATE superheros
-	// SET name = $2
-	// WHERE id = $1;`
-	// _, err = db.Exec(sqlStatement, params["id"], "Pedro")
-	// if err != nil {
-	// 	panic(err)
-	// }
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	var resource SuperHero
+	d := json.NewDecoder(r.Body)
+	d.Decode(&resource)
+	defer r.Body.Close()
+	sqlStatement := `
+	UPDATE superheros
+	SET name = $2
+	WHERE id = $1;`
+	_, err = db.Exec(sqlStatement, params["id"], resource.Name)
+	json.NewEncoder(w).Encode("Nome Atualizado com Sucesso!")
+	if err != nil {
+		panic(err)
+	}
 
 }
 
@@ -149,5 +153,5 @@ func deleteSuperHero(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-
+	json.NewEncoder(w).Encode("Deletado com Sucesso!")
 }
