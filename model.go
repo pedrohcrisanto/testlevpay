@@ -1,13 +1,13 @@
 package main
 
 type SuperHero struct {
-	ID          string     `json:"id"`
-	Name        string     `json:"name"`
-	Biography   Biography  `json:"biography"`
-	PowerStatus PowerStats `json:"powerstats"`
-	Work        Work       `json:"work"`
-	Image       Image      `json:"image"`
-	UUID        string     `json:"uuid"`
+	ID         string     `json:"id"`
+	Name       string     `json:"name"`
+	Biography  Biography  `json:"biography"`
+	PowerStats PowerStats `json:"powerstats"`
+	Work       Work       `json:"work"`
+	Image      Image      `json:"image"`
+	UUID       string     `json:"uuid"`
 }
 
 type Biography struct {
