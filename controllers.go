@@ -13,29 +13,29 @@ import (
 )
 
 func getSuperHeros(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
-		panic(err)
-	}
+	// w.Header().Set("Content-Type", "application/json")
+	// psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+	// 	"password=%s dbname=%s sslmode=disable",
+	// 	host, port, user, password, dbname)
+	// db, err := sql.Open("postgres", psqlInfo)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
-	result, err := db.Query("SELECT id, name, fullname, intelligence, power, occupation, image, work, uuid from superheros")
-	defer db.Close()
-	if err != nil {
-		panic(err.Error())
-	}
-	for result.Next() {
-		var superhero SuperHero
-		err := result.Scan(&superhero.ID, &superhero.Name, &superhero.Fullname, &superhero.Intelligence, &superhero.Power, &superhero.Occupation, &superhero.Image, &superhero.Work, &superhero.UUID)
-		if err != nil {
-			panic(err.Error())
-		}
-		superheros = append(superheros, superhero)
-	}
-	json.NewEncoder(w).Encode(superheros)
+	// result, err := db.Query("SELECT id, name, fullname, intelligence, power, occupation, image, work, uuid from superheros")
+	// defer db.Close()
+	// if err != nil {
+	// 	panic(err.Error())
+	// }
+	// for result.Next() {
+	// 	var superhero SuperHero
+	// 	err := result.Scan(&superhero.ID, &superhero.Name, &superhero.Fullname, &superhero.Intelligence, &superhero.Power, &superhero.Occupation, &superhero.Image, &superhero.Work, &superhero.UUID)
+	// 	if err != nil {
+	// 		panic(err.Error())
+	// 	}
+	// 	superheros = append(superheros, superhero)
+	// }
+	// json.NewEncoder(w).Encode(superheros)
 }
 
 func createSuperHero(w http.ResponseWriter, r *http.Request) {
@@ -48,7 +48,6 @@ func createSuperHero(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	var responseObject Response
 	json.Unmarshal(responseData, &responseObject)
 
@@ -62,12 +61,14 @@ func createSuperHero(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	sqlStatement := `
-	INSERT INTO superheros (name, fullname, intelligence, power, occupation, image, work, uuid)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+	INSERT INTO superheros (name, fullname, intelligence, power, occupation, image, uuid)
+	VALUES ($1, $2, $3, $4, $5, $6, $7)
 	RETURNING id`
 	id := 0
-	fmt.Println(responseObject)
-	err = db.QueryRow(sqlStatement, responseObject.Name, "Nome Completo", 25, 40, "Trabalhador", "URL IMAGE", "Vendendor", uuid.New()).Scan(&id)
+	fmt.Println(response)
+	err = db.QueryRow(sqlStatement, responseObject.Name, responseObject.Biography.Fullname,
+		responseObject.PowerStatus.Intelligence, responseObject.PowerStatus.Power,
+		responseObject.Work.Occupation, responseObject.Image.Url, uuid.New()).Scan(&id)
 	if err != nil {
 		panic(err)
 	}
