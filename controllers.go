@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -170,7 +171,7 @@ func getSearch(w http.ResponseWriter, r *http.Request) {
 
 	sqlStatement := `SELECT * FROM superheros WHERE LOWER(name)=$1 OR uuid=$1;`
 	var superhero SuperHero
-	row := db.QueryRow(sqlStatement, params["query"])
+	row := db.QueryRow(sqlStatement, strings.ToLower(params["query"]))
 	err = row.Scan(&superhero.ID, &superhero.Name, &superhero.Biography.Fullname, &superhero.PowerStats.Intelligence,
 		&superhero.PowerStats.Power, &superhero.Work.Occupation, &superhero.Image.Url, &superhero.UUID)
 	switch err {

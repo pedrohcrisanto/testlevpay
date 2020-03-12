@@ -1,5 +1,7 @@
 package main
 
+var superheros []SuperHero
+
 type SuperHero struct {
 	ID         string     `json:"id"`
 	Name       string     `json:"name"`
@@ -9,7 +11,6 @@ type SuperHero struct {
 	Image      Image      `json:"image"`
 	UUID       string     `json:"uuid"`
 }
-
 type Biography struct {
 	Fullname string `json:"full-name"`
 }
@@ -23,9 +24,6 @@ type PowerStats struct {
 type Work struct {
 	Occupation string `json:"occupation"`
 }
-
-var superheros []SuperHero
-
 type Response struct {
 	Name        string     `json:"name"`
 	PowerStatus PowerStats `json:"powerstats"`
