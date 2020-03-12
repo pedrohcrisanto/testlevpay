@@ -53,22 +53,29 @@ github.com/gorilla/mux
 github.com/google/uuid
 
 
-<h2>Rotas</h2>
+<h2>Rotas:</h2>
 <br>
-## GET => /superherosapi/id
+
+<h3>GET => /superherosapi/id</h3>
+<br>
 Cria um superhero no banco de dados utilizando a api superheroapi.com, passando o ID do superhero da API SuperHero.
 <br> <strong>Exemplo: /superherosapi/1</strong>
-## GET => /superheros
+<br>
+<h3>GET => /superheros</h3>
 Lista todos os superheros gravados no Banco de Dados.
-## GET => /superheros/id
+<br>
+<h3>GET => /superheros/id</h3>
 Lista o superhero gravado no banco de dados da aplicação referente ao parametro id.
 <br> <strong>Exemplo: /superheros/1</strong>
-## GET => /search/query
+<br>
+<h3>GET => /search/query</h3>
 Busca no Banco de dados o superhero a partir de seu name ou UUID.
 <br> <strong>Exemplo: /superheros/spider-man ou /superheros/0bd81b2d-4fa2-40da-a6b9-fa066f4a7b44</strong>
-## PUT => /superheros/id
+<br>
+<h3>PUT => /superheros/id</h3>
 Atualiza o name do superhero referente ao id passado e o name no Body.
 <br><strong>Exemplo Body: {"name": "Spider-Man"}</strong>
-## DELETE => /superheros/id
+<br>
+<h3>DELETE => /superheros/id</h3>
 Deleta o superhero referente ao ID passado como parametro.
 <strong><br>Exemplo: /superheros/1</strong>
