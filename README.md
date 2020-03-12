@@ -13,14 +13,12 @@ Crie o banco
 $ createdb "nome-do-banco"
 ```
 Edite no arquivo main.go suas configurações de banco de dados
+```sh
 	host     = "localhost"
 	port     = 5432
 	user     = "nome-user"
 	password = "senha-user"
 	dbname   = "nome-do-banco"
-```sh
-
-$ createdb "nome-do-banco"
 ```
 
 
@@ -47,26 +45,30 @@ $ go run *.go
 Versão GO: 1.13.8
 
 Dependencias: 
+<br>
 github.com/lib/pq
+<br>
 github.com/gorilla/mux
+<br>
 github.com/google/uuid
 
 Rotas:
+<br>
 GET
-/superherosapi/id
-## Cria um superhero no banco de dados utilizando a api superheroapi.com, passando o ID do superhero da API SuperHero.
-GET
-/superheros
-## Lista todos os superheros gravados no Banco de Dados
-GET
-/superheros/id
-## Lista o superhero gravado no banco de dados da aplicação passando o parametro id
-GET
-/search/query
-## Busca na aplicação o superhero a partir de seu name ou UUID
-PUT
-/superheros/id
-## Atualiza o superhero referente ao id passado como parametro e atualiza seu name a partir de um JSON passado no Body da requisição.
-DELETE
-/superheros/id
-## Deleta o superhero referente ao ID passado como parametro.
+<br>
+## GET => /superherosapi/id
+Cria um superhero no banco de dados utilizando a api superheroapi.com, passando o ID do superhero da API SuperHero.
+<br> <strong>Exemplo: /superherosapi/1</strong>
+## GET => /superheros
+Lista todos os superheros gravados no Banco de Dados.
+## GET => /superheros/id
+Lista o superhero gravado no banco de dados da aplicação referente ao parametro id.
+<br> <strong>Exemplo: /superheros/1</strong>
+## GET => /search/query
+Busca no Banco de dados o superhero a partir de seu name ou UUID.
+<br> <strong>Exemplo: /superheros/spider-man ou /superheros/0bd81b2d-4fa2-40da-a6b9-fa066f4a7b44</strong>
+## PUT => /superheros/id
+Atualiza o superhero referente ao id passado como parametro e atualiza seu name a partir de um JSON passado no Body da requisição.<br><strong>Exemplo Body: {"name": "Spider-Man"}</strong>
+## DELETE => /superheros/id
+Deleta o superhero referente ao ID passado como parametro.
+<strong>Exemplo: /superheros/1</strong>
