@@ -52,6 +52,8 @@ github.com/gorilla/mux
 <br>
 github.com/google/uuid
 
+
+<h2>Rotas</h2>
 <br>
 ## GET => /superherosapi/id
 Cria um superhero no banco de dados utilizando a api superheroapi.com, passando o ID do superhero da API SuperHero.
