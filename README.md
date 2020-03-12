@@ -28,8 +28,8 @@ CREATE TABLE superheros (
   id SERIAL PRIMARY KEY,
   name TEXT,
   fullname TEXT,
-  intelligence INT,
-  power INT,
+  intelligence TEXT,
+  power TEXT,
   occupation TEXT,
   image TEXT,
   uuid TEXT
