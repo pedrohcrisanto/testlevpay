@@ -54,8 +54,6 @@ github.com/google/uuid
 
 
 <h2>Rotas:</h2>
-<br>
-
 <h3>GET => /superherosapi/id</h3>
 <br>
 Cria um superhero no banco de dados utilizando a api superheroapi.com, passando o ID do superhero da API SuperHero.
