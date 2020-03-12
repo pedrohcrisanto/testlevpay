@@ -155,3 +155,31 @@ func deleteSuperHero(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode("Deletado com Sucesso!")
 }
+
+func getSearch(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	sqlStatement := `SELECT * FROM superheros WHERE LOWER(name)=$1 OR uuid=$1;`
+	var superhero SuperHero
+	row := db.QueryRow(sqlStatement, params["query"])
+	err = row.Scan(&superhero.ID, &superhero.Name, &superhero.Biography.Fullname, &superhero.PowerStats.Intelligence,
+		&superhero.PowerStats.Power, &superhero.Work.Occupation, &superhero.Image.Url, &superhero.UUID)
+	switch err {
+	case sql.ErrNoRows:
+		fmt.Println("No rows were returned!")
+		return
+	case nil:
+		json.NewEncoder(w).Encode(superhero)
+	default:
+		panic(err)
+	}
+}

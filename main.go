@@ -19,6 +19,7 @@ func main() {
 	router := mux.NewRouter()
 	// superheros = append(superheros, SuperHero{ID: "1", Name: "Spider-Man"})
 	router.HandleFunc("/superheros", getSuperHeros).Methods("GET")
+	router.HandleFunc("/search/{query}", getSearch).Methods("GET")
 	router.HandleFunc("/superherosapi/{id}", createSuperHero).Methods("POST")
 	router.HandleFunc("/superheros/{id}", getSuperHero).Methods("GET")
 	router.HandleFunc("/superheros/{id}", updateSuperHero).Methods("PUT")
