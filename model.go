@@ -25,9 +25,9 @@ type Work struct {
 	Occupation string `json:"occupation"`
 }
 type Response struct {
-	Name        string     `json:"name"`
-	PowerStatus PowerStats `json:"powerstats"`
-	Biography   Biography  `json:"biography"`
-	Work        Work       `json:"work"`
-	Image       Image      `json:"image"`
+	Name       string     `json:"name"`
+	PowerStats PowerStats `json:"powerstats"`
+	Biography  Biography  `json:"biography"`
+	Work       Work       `json:"work"`
+	Image      Image      `json:"image"`
 }

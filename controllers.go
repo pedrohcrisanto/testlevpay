@@ -70,7 +70,7 @@ func createSuperHero(w http.ResponseWriter, r *http.Request) {
 	RETURNING id`
 	id := 0
 	err = db.QueryRow(sqlStatement, responseObject.Name, responseObject.Biography.Fullname,
-		responseObject.PowerStatus.Intelligence, responseObject.PowerStatus.Power,
+		responseObject.PowerStats.Intelligence, responseObject.PowerStats.Power,
 		responseObject.Work.Occupation, responseObject.Image.Url, uuid.New()).Scan(&id)
 	if err != nil {
 		panic(err)
