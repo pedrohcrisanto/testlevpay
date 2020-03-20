@@ -8,11 +8,12 @@ import (
 )
 
 const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "1992"
-	dbname   = "testlevpay3"
+	host            = "localhost"
+	port            = 5432
+	user            = "postgres"
+	password        = "1992"
+	dbname          = "testlevpay5"
+	superheroapikey = "10157313301043512"
 )
 
 func main() {

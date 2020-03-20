@@ -15,6 +15,7 @@ import (
 
 func getSuperHeros(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
@@ -22,38 +23,45 @@ func getSuperHeros(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+	defer db.Close()
 
 	result, err := db.Query("SELECT id, name, fullname, intelligence, power, occupation, image, uuid from superheros")
-	defer db.Close()
 	if err != nil {
 		panic(err.Error())
 	}
+
 	for result.Next() {
-		var superhero SuperHero
 		err := result.Scan(&superhero.ID, &superhero.Name, &superhero.Biography.Fullname,
 			&superhero.PowerStats.Intelligence, &superhero.PowerStats.Power, &superhero.Work.Occupation,
 			&superhero.Image.Url, &superhero.UUID)
 		if err != nil {
 			panic(err.Error())
 		}
-		superheros = append(superheros, superhero)
+		switch err {
+		case sql.ErrNoRows:
+			fmt.Println("No rows were returned!")
+			return
+		case nil:
+			json.NewEncoder(w).Encode(superhero)
+		default:
+			panic(err)
+		}
 	}
-	json.NewEncoder(w).Encode(superheros)
 }
 
 func createSuperHero(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	variable := params["id"]
-	url := "https://superheroapi.com/api/10157313301043512/" + variable
+	url := "https://superheroapi.com/api/" + superheroapikey + "/" + variable
 
 	response, err := http.Get(url)
 	responseData, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
-	var responseObject Response
 	json.Unmarshal(responseData, &responseObject)
+
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
@@ -61,7 +69,6 @@ func createSuperHero(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-
 	defer db.Close()
 
 	sqlStatement := `
@@ -81,6 +88,7 @@ func createSuperHero(w http.ResponseWriter, r *http.Request) {
 func getSuperHero(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
+
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
@@ -88,11 +96,9 @@ func getSuperHero(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-
 	defer db.Close()
 
 	sqlStatement := `SELECT * FROM superheros WHERE id=$1;`
-	var superhero SuperHero
 	row := db.QueryRow(sqlStatement, params["id"])
 	err = row.Scan(&superhero.ID, &superhero.Name, &superhero.Biography.Fullname, &superhero.PowerStats.Intelligence,
 		&superhero.PowerStats.Power, &superhero.Work.Occupation, &superhero.Image.Url, &superhero.UUID)
