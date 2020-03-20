@@ -127,7 +127,6 @@ func getSuperHero(w http.ResponseWriter, r *http.Request) {
 		&superhero.Work.Occupation,
 		&superhero.Image.Url,
 		&superhero.UUID)
-
 	switch err {
 	case sql.ErrNoRows:
 		fmt.Println("No rows were returned!")

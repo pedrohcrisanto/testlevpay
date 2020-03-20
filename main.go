@@ -22,7 +22,7 @@ func main() {
 	router.HandleFunc("/superheros", getSuperHeros).Methods("GET")
 	// Listar superhero a partir de seu name ou uuid
 	router.HandleFunc("/search/{query}", getSearch).Methods("GET")
-	// Cria um superhero a partir da API(Superhero.com) passando o ID e grava no Banco de Dados.
+	// Cria um superhero a partir da API(Superheroapi.com) passando o ID e grava no Banco de Dados.
 	router.HandleFunc("/superherosapi/{id}", createSuperHero).Methods("POST")
 	// Lista o superhero do Banco de Dados a partir do seu ID
 	router.HandleFunc("/superheros/{id}", getSuperHero).Methods("GET")
