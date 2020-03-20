@@ -19,7 +19,7 @@ Edite no arquivo main.go suas configurações de banco de dados
 	user     = "nome-user"
 	password = "senha-user"
 	dbname   = "nome-do-banco"
-  superheroapikey = "Sua-ApiKey-Superhero.com"
+  superheroapikey = "Sua-ApiKey-Superheroapi.com"
 ```
 
 
