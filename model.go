@@ -3,6 +3,7 @@ package main
 var superheros []SuperHero
 var superhero SuperHero
 var responseObject Response
+var resource SuperHero
 
 type SuperHero struct {
 	ID         string     `json:"id"`

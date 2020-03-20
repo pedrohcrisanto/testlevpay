@@ -31,6 +31,6 @@ func main() {
 	router.HandleFunc("/superheros/{id}", updateSuperHero).Methods("PUT")
 	// Deleta o superhero do Banco de Dados passando o ID como params
 	router.HandleFunc("/superheros/{id}", deleteSuperHero).Methods("DELETE")
-	http.ListenAndServe(":8000", router)
 
+	http.ListenAndServe(":8000", router)
 }

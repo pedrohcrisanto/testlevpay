@@ -25,15 +25,20 @@ func getSuperHeros(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	result, err := db.Query("SELECT id, name, fullname, intelligence, power, occupation, image, uuid from superheros")
+	result, err := db.Query("SELECT * from superheros")
 	if err != nil {
 		panic(err.Error())
 	}
 
 	for result.Next() {
-		err := result.Scan(&superhero.ID, &superhero.Name, &superhero.Biography.Fullname,
-			&superhero.PowerStats.Intelligence, &superhero.PowerStats.Power, &superhero.Work.Occupation,
-			&superhero.Image.Url, &superhero.UUID)
+		err := result.Scan(&superhero.ID,
+			&superhero.Name,
+			&superhero.Biography.Fullname,
+			&superhero.PowerStats.Intelligence,
+			&superhero.PowerStats.Power,
+			&superhero.Work.Occupation,
+			&superhero.Image.Url,
+			&superhero.UUID)
 		if err != nil {
 			panic(err.Error())
 		}
@@ -72,16 +77,29 @@ func createSuperHero(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	sqlStatement := `
-	INSERT INTO superheros (name, fullname, intelligence, power, occupation, image, uuid)
+	INSERT INTO superheros (
+		name, 
+		fullname, 
+		intelligence, 
+		power, 
+		occupation, 
+		image, 
+		uuid)
 	VALUES ($1, $2, $3, $4, $5, $6, $7)
 	RETURNING id`
 	id := 0
-	err = db.QueryRow(sqlStatement, responseObject.Name, responseObject.Biography.Fullname,
-		responseObject.PowerStats.Intelligence, responseObject.PowerStats.Power,
-		responseObject.Work.Occupation, responseObject.Image.Url, uuid.New()).Scan(&id)
+	err = db.QueryRow(sqlStatement,
+		responseObject.Name,
+		responseObject.Biography.Fullname,
+		responseObject.PowerStats.Intelligence,
+		responseObject.PowerStats.Power,
+		responseObject.Work.Occupation,
+		responseObject.Image.Url,
+		uuid.New()).Scan(&id)
 	if err != nil {
 		panic(err)
 	}
+
 	json.NewEncoder(w).Encode("Criado com Sucesso!")
 }
 
@@ -100,8 +118,16 @@ func getSuperHero(w http.ResponseWriter, r *http.Request) {
 
 	sqlStatement := `SELECT * FROM superheros WHERE id=$1;`
 	row := db.QueryRow(sqlStatement, params["id"])
-	err = row.Scan(&superhero.ID, &superhero.Name, &superhero.Biography.Fullname, &superhero.PowerStats.Intelligence,
-		&superhero.PowerStats.Power, &superhero.Work.Occupation, &superhero.Image.Url, &superhero.UUID)
+	err = row.Scan(
+		&superhero.ID,
+		&superhero.Name,
+		&superhero.Biography.Fullname,
+		&superhero.PowerStats.Intelligence,
+		&superhero.PowerStats.Power,
+		&superhero.Work.Occupation,
+		&superhero.Image.Url,
+		&superhero.UUID)
+
 	switch err {
 	case sql.ErrNoRows:
 		fmt.Println("No rows were returned!")
@@ -111,12 +137,12 @@ func getSuperHero(w http.ResponseWriter, r *http.Request) {
 	default:
 		panic(err)
 	}
-
 }
 
 func updateSuperHero(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
+
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
@@ -125,20 +151,21 @@ func updateSuperHero(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	defer db.Close()
-	var resource SuperHero
+
 	d := json.NewDecoder(r.Body)
 	d.Decode(&resource)
 	defer r.Body.Close()
+
 	sqlStatement := `
 	UPDATE superheros
 	SET name = $2
 	WHERE id = $1;`
 	_, err = db.Exec(sqlStatement, params["id"], resource.Name)
-	json.NewEncoder(w).Encode("Nome Atualizado com Sucesso!")
 	if err != nil {
 		panic(err)
 	}
 
+	json.NewEncoder(w).Encode("Nome Atualizado com Sucesso!")
 }
 
 func deleteSuperHero(w http.ResponseWriter, r *http.Request) {
@@ -160,12 +187,14 @@ func deleteSuperHero(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+
 	json.NewEncoder(w).Encode("Deletado com Sucesso!")
 }
 
 func getSearch(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
+
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
@@ -176,10 +205,15 @@ func getSearch(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	sqlStatement := `SELECT * FROM superheros WHERE LOWER(name)=$1 OR uuid=$1;`
-	var superhero SuperHero
 	row := db.QueryRow(sqlStatement, strings.ToLower(params["query"]))
-	err = row.Scan(&superhero.ID, &superhero.Name, &superhero.Biography.Fullname, &superhero.PowerStats.Intelligence,
-		&superhero.PowerStats.Power, &superhero.Work.Occupation, &superhero.Image.Url, &superhero.UUID)
+	err = row.Scan(&superhero.ID,
+		&superhero.Name,
+		&superhero.Biography.Fullname,
+		&superhero.PowerStats.Intelligence,
+		&superhero.PowerStats.Power,
+		&superhero.Work.Occupation,
+		&superhero.Image.Url,
+		&superhero.UUID)
 	switch err {
 	case sql.ErrNoRows:
 		fmt.Println("No rows were returned!")
