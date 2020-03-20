@@ -170,6 +170,7 @@ func updateSuperHero(w http.ResponseWriter, r *http.Request) {
 func deleteSuperHero(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
+
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
